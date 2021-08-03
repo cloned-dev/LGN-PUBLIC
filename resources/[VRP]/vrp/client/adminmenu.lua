@@ -6,31 +6,28 @@ local MiscBtn = {}
 local EntitysDeleted = {}
 local Groups = {}
 local cfg = module('cfg/admin_menu')
-RMenu.Add('vRPAdmin', 'main', RageUI.CreateMenu("Player Management", "~r~Player Adminstration ",1250,100))
+RMenu.Add('vRPAdmin', 'main', RageUI.CreateMenu("", "Admin Menu ",1250,100))
 RMenu.Add('vRPAdmin', 'players',  RageUI.CreateSubMenu(RMenu:Get("vRPAdmin", "main")))
 RMenu.Add('vRPAdmin', 'player_selected',  RageUI.CreateSubMenu(RMenu:Get("vRPAdmin", "players")))
 RMenu.Add('vRPAdmin', 'groups',  RageUI.CreateSubMenu(RMenu:Get("vRPAdmin", "player_selected")))
 RMenu.Add('vRPAdmin', 'groups_manage',  RageUI.CreateSubMenu(RMenu:Get("vRPAdmin", "groups")))
 RMenu.Add('vRPAdmin', 'misc',  RageUI.CreateSubMenu(RMenu:Get("vRPAdmin", "main")))
 RMenu.Add('vRPAdmin', 'staffopts', RageUI.CreateSubMenu(RMenu:Get("vRPAdmin", "main")))
+RMenu.Add('vRPAdmin', 'tpopts', RageUI.CreateSubMenu(RMenu:Get("vRPAdmin", "main")))
 RMenu.Add('vRPAdmin', 'EntitysDeleted',  RageUI.CreateSubMenu(RMenu:Get("vRPAdmin", "main")))
 
 RageUI.CreateWhile(1.0, true, function()
     if RageUI.Visible(RMenu:Get('vRPAdmin', 'main')) then
         RageUI.DrawContent({ header = true, glare = true, instructionalButton = true}, function()
-                RageUI.Button("~o~Players", "", {RightLabel = "<->"}, true, function(Hovered, Active, Selected) end, RMenu:Get("vRPAdmin", "players"))
-                RageUI.Button("~o~Misc Options", "", {RightLabel = "<->"}, true, function(Hovered, Active, Selected) end, RMenu:Get("vRPAdmin", "misc"))
-                RageUI.Button("~g~Staff Options", "", {RightLabel = "<->"}, true, function(Hovered, Active, Selected) end, RMenu:Get("vRPAdmin", "staffopts"))
-                RageUI.Button("~r~Spawn Bike", "", {RightLabel = "<->"}, true, function(Hovered, Active, Selected)
-                    if (Selected) then
-                        SpawnVehicle('bmx')
-                    end
-                end, RMenu:Get('vRPAdmin', 'main'))
+                RageUI.Button("Players", "", {}, true, function(Hovered, Active, Selected) end, RMenu:Get("vRPAdmin", "players"))
+                RageUI.Button("Misc Options", "", {}, true, function(Hovered, Active, Selected) end, RMenu:Get("vRPAdmin", "misc"))
+                RageUI.Button("Staff Options", "", {}, true, function(Hovered, Active, Selected) end, RMenu:Get("vRPAdmin", "staffopts"))
+
         end)
     end
     if RageUI.Visible(RMenu:Get('vRPAdmin', 'misc')) then 
-        RMenu:Get('vRPAdmin', 'misc'):SetTitle('Server Management') 
-        RMenu:Get('vRPAdmin', 'misc'):SetSubtitle(" ")
+        RMenu:Get('vRPAdmin', 'misc'):SetTitle('') 
+        RMenu:Get('vRPAdmin', 'misc'):SetSubtitle("Misc Options")
         RageUI.DrawContent({ header = true, glare = true, instructionalButton = true}, function()
             
             for i,v in pairs(MiscBtn) do 
@@ -40,23 +37,33 @@ RageUI.CreateWhile(1.0, true, function()
                     end
                 end)
             end
+            RageUI.Button("Spawn Bike", "", {}, true, function(Hovered, Active, Selected)
+                if (Selected) then
+                    SpawnVehicle('bmx')
+                end
+            end, RMenu:Get('vRPAdmin', 'misc'))
         end)
     end
+
+
+
+
     if RageUI.Visible(RMenu:Get('vRPAdmin', 'staffopts')) then 
-        RMenu:Get('vRPAdmin', 'staffopts'):SetTitle('Staff Options') 
-        RMenu:Get('vRPAdmin', 'misc'):SetSubtitle(" ")
+        RMenu:Get('vRPAdmin', 'staffopts'):SetTitle('') 
+        RMenu:Get('vRPAdmin', 'staffopts'):SetSubtitle("Staff Options")
         RageUI.DrawContent({ header = true, glare = true, instructionalButton = true}, function()
             RageUI.Button("Staff On", "", {}, true, function(Hovered, Active, Selected) end, RMenu:Get("vRPAdmin", "staffopts"))
 
         end)
     end
     if RageUI.Visible(RMenu:Get('vRPAdmin', 'players')) then
+        RMenu:Get('vRPAdmin', 'players'):SetSubtitle("Online Players")
         RageUI.DrawContent({ header = true, glare = true, instructionalButton = true}, function()
             for i,v in pairs(plrsInServer) do 
                 RageUI.Button(v[2], "Perm ID: " .. i .. ' / Temp ID: ' .. v[1], {}, true, function(Hovered, Active, Selected) 
                     if Selected then 
                         SelectedPerm = i
-                        RMenu:Get('vRPAdmin', 'player_selected'):SetSubtitle("~b~Options for TempID: " .. v[1] .. ' | Name: ' .. v[2])
+                        RMenu:Get('vRPAdmin', 'player_selected'):SetSubtitle("~r~Options for TempID: " .. v[1] .. ' | Name: ' .. v[2])
                     end
                 end, RMenu:Get("vRPAdmin", "player_selected"))
             end
@@ -64,6 +71,13 @@ RageUI.CreateWhile(1.0, true, function()
     end
     if RageUI.Visible(RMenu:Get('vRPAdmin', 'player_selected')) then
         RageUI.DrawContent({ header = true, glare = true, instructionalButton = true}, function()
+
+            RageUI.Button("TP TO LEGION", "", {}, true, function(Hovered, Active, Selected) 
+                if Selected then
+                    SetEntityCoords(PlayerPedId(), 160.28871154785,-997.52886962891,29.347080230713)
+                end
+            end, RMenu:Get("vRPAdmin", "player_selected"))
+
             for i,v in pairs(Buttons) do 
                 RageUI.Button(i, "", {}, true, function(Hovered, Active, Selected) 
                     if Selected then 
@@ -74,7 +88,7 @@ RageUI.CreateWhile(1.0, true, function()
             RageUI.Button('Players Groups', "", {}, true, function(Hovered, Active, Selected)
                 if Selected then 
                     TriggerServerEvent('vRPAdmin:Groups', SelectedPerm)
-                    RMenu:Get('vRPAdmin', 'groups'):SetSubtitle("~b~Groups for PermID: " .. SelectedPerm)
+                    RMenu:Get('vRPAdmin', 'groups'):SetSubtitle("~r~Groups for PermID: " .. SelectedPerm)
                 end
             end, RMenu:Get("vRPAdmin", "groups"))
         end) 
@@ -139,14 +153,14 @@ AddEventHandler('vRPAdmin:Spectate', function(plr,tpcoords)
         end
         Wait(300)
         targetPed = GetPlayerPed(GetPlayerFromServerId(plr))
-        if targetPed == playerPed then tvRP.notify('~r~I mean you cannot spectate yourself...') return end
+        if targetPed == playerPed then tvRP.notify('I mean you cannot spectate yourself...') return end
 		NetworkSetInSpectatorMode(true, targetPed)
         SetEntityCollision(playerPed, false, false)
         SetEntityVisible(playerPed, false, 0)
 		SetEveryoneIgnorePlayer(playerPed, true)	
 		SetEntityInvincible(playerPed, true) 
         Spectating = true
-        tvRP.notify('~g~Spectating Player.')
+        tvRP.notify('~r~Spectating Player.')
     else 
         NetworkSetInSpectatorMode(false, targetPed)
         SetEntityVisible(playerPed, true, 0)
@@ -155,7 +169,7 @@ AddEventHandler('vRPAdmin:Spectate', function(plr,tpcoords)
 		SetEntityCollision(playerPed, true, true)
         Spectating = false;
         SetEntityCoords(playerPed, LastCoords)
-        tvRP.notify('~r~Stopped Spectating Player.')
+        tvRP.notify('Stopped Spectating Player.')
     end 
 end)
 
@@ -241,9 +255,9 @@ AddEventHandler("vRPAdmin:EntityCleanupGun", function()
     EntityCleanupGun = not EntityCleanupGun
     if EntityCleanupGun then 
         GiveWeaponToPed(PlayerPedId(), GetHashKey('WEAPON_PISTOL'), 250, false, true)
-        tvRP.notify("~g~Entity cleanup gun enabled.")
+        tvRP.notify("~r~Entity cleanup gun enabled.")
     else 
-        tvRP.notify("~r~Entity cleanup gun disabled.")
+        tvRP.notify("Entity cleanup gun disabled.")
         RemoveWeaponFromPed(PlayerPedId(), GetHashKey('WEAPON_PISTOL'))
     end
 end)
@@ -258,14 +272,14 @@ Citizen.CreateThread(function()
                     local yes, entity = GetEntityPlayerIsFreeAimingAt(plr)
                     if yes then 
                         EntitysDeleted[GetEntityModel(entity)] = true;
-                        tvRP.notify('~g~Deleted Entity: ' .. GetEntityModel(entity))
+                        tvRP.notify('~r~Deleted Entity: ' .. GetEntityModel(entity))
                         NetworkDelete(entity)
                     end
                 end 
             else 
                 RemoveWeaponFromPed(PlayerPedId(), GetHashKey('WEAPON_PISTOL'))
                 EntityCleanupGun = false;
-                tvRP.notify("~r~Entity cleanup gun disabled.")
+                tvRP.notify("Entity cleanup gun disabled.")
             end 
         end
     end
@@ -320,7 +334,7 @@ Citizen.CreateThread(function()
             if HasScaleformMovieLoaded(scaleform) then
                 PushScaleformMovieFunction(scaleform, "SHOW_SHARD_WASTED_MP_MESSAGE")
                 BeginTextComponent("STRING")
-                AddTextComponentString("~r~THIS SERVER IS SHUTTING DOWN IN: " .. currenttime .. " Seconds")
+                AddTextComponentString("THIS SERVER IS SHUTTING DOWN IN: " .. currenttime .. " Seconds")
                 EndTextComponent()
                 PopScaleformMovieFunctionVoid()
                 DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255)
