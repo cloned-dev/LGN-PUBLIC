@@ -21,8 +21,6 @@ admin_coords = {}
 
 
 
-
-
 RegisterNetEvent('callmanager:create_ticket')
 AddEventHandler('callmanager:create_ticket',function(reason, call_type)
     local source = source
@@ -31,10 +29,10 @@ AddEventHandler('callmanager:create_ticket',function(reason, call_type)
     local caller_name = GetPlayerName(source)
     local caller_id = vRP.getUserId({source})
     table.insert(server_tickets,{ticket_type = call_type ,ticket_reason = reason,player_name = caller_name,caller_perm = caller_id,caller_temp = source, coords = caller_coords})
-
+    --- Call ur function here
     for k,v in ipairs(_G.Online_users) do
         if vRP.hasPermission({_G.Online_users[v], admin.tickets}) or vRP.hasPermission({_G.Online_users[v], police.drag}) or vRP.hasPermission({_G.Online_users[v], emscheck.revive}) then
-            TriggerClientEvent('callmanger:recive_tickets_table', v)
+            TriggerClientEvent('callmanger:recive_tickets_table', k, server_tickets)
         end
     end
 end)
@@ -44,7 +42,8 @@ RegisterNetEvent('callmanager:take_ticket')
 AddEventHandler('callmanager:take_ticket',function(ticket)
     local source = source
     if server_tickets[ticket] ~= source then
-        ExecuteCommand(staffon)
+        TriggerEvent(discordwebhook_taketicket)
+        --ExecuteCommand(staffon)
     else
         vRP.notify("You cannot take your own ticket")
     end
@@ -71,14 +70,12 @@ end)
 
 AddEventHandler('playerDropped', function ()
    local source = source
-   for k, v in ipairs(server_tickets) do
-      
+   for k, v in pairs(server_tickets) do
+      if server_tickets[k] == source then
+        server_tickets[k] = nil
+      end
    end
    _G.Online_users[source] = nil
 end)
-  
-  
 
---ReigsterCommand("calladmin", function(source, args, rawCommand))
---    vRP.prompt({source, "Reason:", "", function(player, Reason)
---        if Reason == "" then return end
+

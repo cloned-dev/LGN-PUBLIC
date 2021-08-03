@@ -3,7 +3,7 @@ vRP = Proxy.getInterface("vRP")
 
 
 
-
+admin_tickets = {}
 
 
 
@@ -21,5 +21,5 @@ RMenu.Add("callmanager", "ems", RageUI.CreateSubMenu(RMenu:Get("callmanager", "m
 
 RegisterNetEvent("callmanger:recive_tickets_table")
 AddEventHandler("callmanger:recive_tickets_table", function(ticket_table)
-   local ticket_table = ticket_table
+   admin_tickets = ticket_table
 end)
