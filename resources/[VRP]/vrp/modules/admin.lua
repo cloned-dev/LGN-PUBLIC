@@ -299,6 +299,8 @@ local function ch_tptocoords(player,choice)
     end)
 end
 
+
+
 local function ch_givemoney(player,choice)
     local user_id = vRP.getUserId(player)
     if user_id ~= nil then

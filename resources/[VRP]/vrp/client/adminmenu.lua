@@ -3,7 +3,6 @@ local SelectedPerm = nil;
 local SelectedGroup = nil;
 local Buttons = {}
 local MiscBtn = {}
-local EntitysDeleted = {}
 local Groups = {}
 local cfg = module('cfg/admin_menu')
 RMenu.Add('vRPAdmin', 'main', RageUI.CreateMenu("", "Admin Menu ",1250,100))
@@ -71,13 +70,6 @@ RageUI.CreateWhile(1.0, true, function()
     end
     if RageUI.Visible(RMenu:Get('vRPAdmin', 'player_selected')) then
         RageUI.DrawContent({ header = true, glare = true, instructionalButton = true}, function()
-
-            RageUI.Button("TP TO LEGION", "", {}, true, function(Hovered, Active, Selected) 
-                if Selected then
-                    SetEntityCoords(PlayerPedId(), 160.28871154785,-997.52886962891,29.347080230713)
-                end
-            end, RMenu:Get("vRPAdmin", "player_selected"))
-
             for i,v in pairs(Buttons) do 
                 RageUI.Button(i, "", {}, true, function(Hovered, Active, Selected) 
                     if Selected then 
@@ -197,7 +189,6 @@ function GetPlayers()
     end
     return players
 end
-
 
 
 
