@@ -87,6 +87,9 @@ cfg.Buttons = {
     ["TP To Player"] = {function(self)
         TriggerServerEvent('vRPAdmin:TPTo', self)
     end, "player.tpto"},
+    ["Teleport player to Admin Island"] = {function(self)
+        TriggerServerEvent('vRPAdmin:AdminTP', self)
+    end, "player.tpto"},
     ["Bring Player"] = {function(self)
         TriggerServerEvent('vRPAdmin:Bring', self)
     end, "player.tpbring"},

@@ -835,6 +835,20 @@ AddEventHandler('vRPAdmin:ServerShutdown', function()
     end
 end)
 
+RegisterServerEvent("vRPAdmin:AdminTP")
+AddEventHandler("vRPAdmin:AdminTP",function(id)
+    local source = source 
+    local SelectedPlrSource = vRP.getUserSource(id) 
+    local userid = vRP.getUserId(source)
+    if vRP.hasPermission(userid, 'player.tpto') then
+        if SelectedPlrSource then 
+        SetEntityCoords(SelectedPlrSource, 3501.3525390625,2590.6750488281,13.562794685364)
+        SetEntityCoords(source, 3501.3525390625,2590.6750488281,13.562794685364)
+        vRPclient.notify(SelectedPlrSource, {"~g~You have been teleported to Admin Island"})
+        vRPclient.notify(source, {"~g~You have teleported this player to Admin Island: "..SelectedPlrSource})
+        end
+    end
+end)
 
 RegisterNetEvent('vRPAdmin:Ban')
 AddEventHandler('vRPAdmin:Ban', function(id, hours, reason)
