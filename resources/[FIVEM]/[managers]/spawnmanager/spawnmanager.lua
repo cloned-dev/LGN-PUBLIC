@@ -253,29 +253,6 @@ function spawnPlayer(spawnIdx, cb)
         -- freeze the local player
         freezePlayer(PlayerId(), true)
 
-        -- if the spawn has a model set
-        if spawn.model then
-            RequestModel(spawn.model)
-
-            -- load the model for this spawn
-            while not HasModelLoaded(spawn.model) do
-                RequestModel(spawn.model)
-
-                Wait(0)
-            end
-
-            -- change the player model
-            SetPlayerModel(PlayerId(), spawn.model)
-
-            -- release the player model
-            SetModelAsNoLongerNeeded(spawn.model)
-            
-            -- RDR3 player model bits
-            if N_0x283978a15512b2fe then
-				N_0x283978a15512b2fe(PlayerPedId(), true)
-            end
-        end
-
         -- preload collisions for the spawnpoint
         RequestCollisionAtCoord(spawn.x, spawn.y, spawn.z)
 
